@@ -1,0 +1,30 @@
+# WordPress
+*.log
+.htaccess
+
+# Archivos compilados
+*.zip
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Node modules (si se usa en el futuro)
+node_modules/
+
+# Archivos temporales
+*.tmp
+*.bak
+*.swp
+*~
+
+# Imágenes de referencia en development (opcional)
+development-files/*.jpg
+development-files/*.png
