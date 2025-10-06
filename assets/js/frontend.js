@@ -246,9 +246,8 @@
             
             // Meta info
             $('#pf-cat-badge').text(data.category_name || 'Sin categoría');
-            if (data.category_color) {
-                $('#pf-cat-badge').css('background', data.category_color);
-            }
+            // Guardar el color de la categoría para usarlo si no hay personalización
+            $('#pf-cat-badge').data('default-color', data.category_color || '#2196F3');
             $('#pf-views').text(data.views || 0);
             $('#pf-likes').text(data.likes || 0);
             
@@ -426,9 +425,10 @@
             }
             
             // Aplicar estilos del badge de categoría
-            if (categoryBg) {
-                $('#pf-cat-badge').css('background', categoryBg);
-            }
+            // Usar color personalizado de Elementor o el color de la categoría de la BD
+            var finalCategoryBg = categoryBg || $('#pf-cat-badge').data('default-color') || '#2196F3';
+            $('#pf-cat-badge').css('background', finalCategoryBg);
+            
             if (categoryTextColor) {
                 $('#pf-cat-badge').css('color', categoryTextColor);
             }
