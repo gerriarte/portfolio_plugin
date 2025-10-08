@@ -314,9 +314,38 @@ jQuery(document).ready(function($) {
     }
     
     function loadCategoryData(categoryId) {
-        // Aquí cargarías los datos de la categoría desde el servidor
-        // Por ahora, solo reseteamos el formulario
-        resetCategoryForm();
+        // Cargar datos de la categoría desde el servidor
+        $.ajax({
+            url: portfolio_admin.ajax_url,
+            type: 'POST',
+            data: {
+                action: 'portfolio_get_category_for_edit',
+                category_id: categoryId,
+                nonce: portfolio_admin.nonce
+            },
+            success: function(response) {
+                if (response.success) {
+                    const category = response.data;
+
+                    // Llenar formulario con datos de la categoría
+                    $('#category-id').val(category.id);
+                    $('#category-name').val(category.name);
+                    $('#category-description').val(category.description);
+                    $('#category-color').val(category.color);
+
+                    // Actualizar selector de color
+                    $('.color-preset').removeClass('active');
+                    $(`.color-preset[data-color="${category.color}"]`).addClass('active');
+                } else {
+                    showNotification('Error al cargar los datos de la categoría', 'error');
+                    resetCategoryForm();
+                }
+            },
+            error: function() {
+                showNotification('Error al cargar los datos de la categoría', 'error');
+                resetCategoryForm();
+            }
+        });
     }
     
     function resetProjectForm() {

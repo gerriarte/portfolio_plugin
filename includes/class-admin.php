@@ -21,6 +21,7 @@ class PortfolioAdmin {
         add_action('wp_ajax_portfolio_delete_category', array($this, 'ajax_delete_category'));
         add_action('wp_ajax_portfolio_upload_image', array($this, 'ajax_upload_image'));
         add_action('wp_ajax_portfolio_get_project_for_edit', array($this, 'ajax_get_project_for_edit'));
+        add_action('wp_ajax_portfolio_get_category_for_edit', array($this, 'ajax_get_category_for_edit'));
     }
     
     /**
@@ -364,5 +365,27 @@ class PortfolioAdmin {
         );
         
         wp_send_json_success($project_data);
+    }
+
+    /**
+     * AJAX: Obtener categoría para edición
+     */
+    public function ajax_get_category_for_edit() {
+        check_ajax_referer('portfolio_admin_nonce', 'nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_die(__('No tienes permisos para realizar esta acción', 'portfolio-plugin'));
+        }
+
+        $category_id = intval($_POST['category_id']);
+        $category = PortfolioDatabase::get_category($category_id);
+
+        if (!$category) {
+            wp_send_json_error(array(
+                'message' => __('Categoría no encontrada', 'portfolio-plugin')
+            ));
+        }
+
+        wp_send_json_success($category);
     }
 }

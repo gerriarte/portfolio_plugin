@@ -329,7 +329,7 @@ class PortfolioDatabase {
             $table_categories,
             $data,
             array('id' => $id),
-            array('%s', '%s', '%s', '%s'),
+            array('%s', '%s', '%s'),
             array('%d')
         );
         
