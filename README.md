@@ -248,6 +248,14 @@ Las contribuciones son bienvenidas. Por favor:
 
 ## Changelog
 
+### Versión 1.1.0
+- **Nuevo:** Soporte para videos de YouTube y Vimeo en proyectos
+- **Nuevo:** Campos de video en el formulario de administración
+- **Nuevo:** Videos embebidos responsive en el modal (aspect ratio 16:9)
+- **Mejora:** Detección automática de IDs de YouTube y Vimeo
+- **Mejora:** Sección de videos solo visible cuando hay contenido
+- **Mejora:** Estilos Material Design con efectos hover y transiciones
+
 ### Versión 1.0.0
 - Lanzamiento inicial
 - Gestión completa de proyectos y categorías
@@ -260,6 +268,12 @@ Las contribuciones son bienvenidas. Por favor:
 ## Licencia
 
 Este plugin está licenciado bajo GPL v2 o posterior.
+
+## Autor
+
+**Gerardo Riarte + Cursor**
+- Website: [gerardoriarte.com](https://gerardoriarte.com)
+- Desarrollado con asistencia de Cursor AI
 
 ## Créditos
 

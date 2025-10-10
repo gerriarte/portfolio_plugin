@@ -1,10 +1,11 @@
 <?php
 /**
  * Plugin Name: Portfolio Projects Manager
- * Plugin URI: https://github.com/usuario/portfolio_plugin
+ * Plugin URI: https://gerardoriarte.com
  * Description: Plugin para gestionar portafolios de proyectos con integración a Elementor
- * Version: 1.0.0
- * Author: Usuario
+ * Version: 1.1.0
+ * Author: Gerardo Riarte + Cursor
+ * Author URI: https://gerardoriarte.com
  * License: GPL v2 or later
  * Text Domain: portfolio-plugin
  * Domain Path: /languages
@@ -16,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Definir constantes del plugin
-define('PORTFOLIO_PLUGIN_VERSION', '1.0.0');
+define('PORTFOLIO_PLUGIN_VERSION', '1.1.0');
 define('PORTFOLIO_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('PORTFOLIO_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('PORTFOLIO_PLUGIN_BASENAME', plugin_basename(__FILE__));
