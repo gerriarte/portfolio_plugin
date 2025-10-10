@@ -30,6 +30,13 @@ class PortfolioFrontend {
             PORTFOLIO_PLUGIN_VERSION
         );
         
+        wp_enqueue_style(
+            'portfolio-modal-css',
+            PORTFOLIO_PLUGIN_URL . 'assets/css/modal-styles.css',
+            array(),
+            PORTFOLIO_PLUGIN_VERSION . '-' . time() // Forzar recarga sin caché
+        );
+        
         wp_enqueue_script(
             'portfolio-frontend-js',
             PORTFOLIO_PLUGIN_URL . 'assets/js/frontend.js',
@@ -75,12 +82,14 @@ class PortfolioFrontend {
             'id' => $project->id,
             'title' => $project->title,
             'description' => $project->description,
-            'content' => $project->content,
             'featured_image' => $project->featured_image,
             'gallery' => $project->gallery ? unserialize($project->gallery) : array(),
             'category_name' => $project->category_name,
             'category_color' => $project->category_color,
             'external_url' => $project->external_url,
+            'youtube_url' => $project->youtube_url ?? '',
+            'vimeo_url' => $project->vimeo_url ?? '',
+            'project_year' => $project->project_year,
             'project_date' => $project->project_date,
             'views' => $project->views + 1,
             'likes' => $project->likes,
@@ -179,6 +188,12 @@ class PortfolioFrontend {
                                         <span class="dashicons dashicons-search"></span>
                                     </button>
                                 </div>
+                            </div>
+                            
+                            <!-- Videos -->
+                            <div class="modal-project-videos" style="display: none;">
+                                <h4><?php _e('Videos', 'portfolio-plugin'); ?></h4>
+                                <div class="videos-container"></div>
                             </div>
                             
                             <!-- Galería -->

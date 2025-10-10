@@ -161,6 +161,36 @@ El plugin incluye endpoints REST API:
 - `POST /wp-json/portfolio/v1/projects/{id}/views` - Incrementar vistas
 - `POST /wp-json/portfolio/v1/projects/{id}/likes` - Incrementar likes
 
+## Galería de Imágenes
+
+### Configuración de la Galería en el Modal
+
+El plugin incluye una galería con scroll vertical que permite visualizar múltiples imágenes y videos de cada proyecto.
+
+#### Controles Disponibles en Elementor:
+
+1. **Ancho de las imágenes**: Controla el ancho de cada imagen en la galería (por defecto 100%)
+2. **Altura de las imágenes**: Controla la altura de cada imagen
+   - **Auto** (recomendado): Mantiene las proporciones originales de las imágenes
+   - **Píxeles fijos**: Establece una altura fija (se recortarán para ajustarse)
+3. **Espacio entre imágenes**: Controla la separación vertical entre imágenes (por defecto 15px)
+
+#### Características:
+
+- ✅ Scroll vertical suave con scrollbar personalizada
+- ✅ Visualización de imágenes y videos
+- ✅ Efectos hover en cada imagen
+- ✅ Mantiene proporciones originales (modo 'auto')
+- ✅ Adaptable a diferentes tamaños de pantalla
+
+#### Galería de Elementor:
+
+Además de las imágenes del proyecto, puedes usar una galería de Elementor:
+
+1. Activa "**Usar galería de Elementor**" en el widget
+2. Selecciona las imágenes en "**Galería de Elementor**"
+3. Esta galería se mostrará en el modal de todos los proyectos
+
 ## Personalización
 
 ### Hooks y Filtros

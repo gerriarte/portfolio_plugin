@@ -91,7 +91,7 @@ class PortfolioAdmin {
             'portfolio-admin-js',
             PORTFOLIO_PLUGIN_URL . 'assets/js/admin.js',
             array('jquery', 'jquery-ui-sortable'),
-            $this->version,
+            $this->version . '-' . time(), // Forzar recarga
             true
         );
         
@@ -172,19 +172,32 @@ class PortfolioAdmin {
         check_ajax_referer('portfolio_admin_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            wp_die(__('No tienes permisos para realizar esta acción', 'portfolio-plugin'));
+            wp_send_json_error(array(
+                'message' => __('No tienes permisos para realizar esta acción', 'portfolio-plugin')
+            ));
+            return;
+        }
+        
+        // Validar campos requeridos
+        if (empty($_POST['title'])) {
+            wp_send_json_error(array(
+                'message' => __('El título del proyecto es requerido', 'portfolio-plugin')
+            ));
+            return;
         }
         
         $project_data = array(
             'title' => sanitize_text_field($_POST['title']),
-            'description' => sanitize_textarea_field($_POST['description']),
-            'content' => wp_kses_post($_POST['content']),
-            'featured_image' => esc_url_raw($_POST['featured_image']),
-            'category_id' => intval($_POST['category_id']),
-            'status' => sanitize_text_field($_POST['status']),
+            'description' => isset($_POST['description']) ? sanitize_textarea_field($_POST['description']) : '',
+            'featured_image' => isset($_POST['featured_image']) ? esc_url_raw($_POST['featured_image']) : '',
+            'category_id' => isset($_POST['category_id']) ? intval($_POST['category_id']) : 0,
+            'status' => isset($_POST['status']) ? sanitize_text_field($_POST['status']) : 'published',
             'featured' => isset($_POST['featured']) ? 1 : 0,
-            'external_url' => esc_url_raw($_POST['external_url']),
-            'project_date' => sanitize_text_field($_POST['project_date'])
+            'external_url' => isset($_POST['external_url']) ? esc_url_raw($_POST['external_url']) : '',
+            'youtube_url' => isset($_POST['youtube_url']) ? esc_url_raw($_POST['youtube_url']) : '',
+            'vimeo_url' => isset($_POST['vimeo_url']) ? esc_url_raw($_POST['vimeo_url']) : '',
+            'project_year' => !empty($_POST['project_year']) ? sanitize_text_field($_POST['project_year']) : null,
+            'project_date' => isset($_POST['project_date']) ? sanitize_text_field($_POST['project_date']) : date('Y-m-d')
         );
         
         // Procesar galería
@@ -194,20 +207,31 @@ class PortfolioAdmin {
         
         $project_id = isset($_POST['project_id']) ? intval($_POST['project_id']) : 0;
         
-        if ($project_id > 0) {
-            $result = PortfolioDatabase::update_project($project_id, $project_data);
-        } else {
-            $result = PortfolioDatabase::create_project($project_data);
-        }
-        
-        if ($result) {
-            wp_send_json_success(array(
-                'message' => __('Proyecto guardado exitosamente', 'portfolio-plugin'),
-                'project_id' => $project_id > 0 ? $project_id : $result
-            ));
-        } else {
+        try {
+            if ($project_id > 0) {
+                $result = PortfolioDatabase::update_project($project_id, $project_data);
+                $action = 'actualizado';
+            } else {
+                $result = PortfolioDatabase::create_project($project_data);
+                $action = 'creado';
+            }
+            
+            if ($result) {
+                wp_send_json_success(array(
+                    'message' => sprintf(__('Proyecto %s exitosamente', 'portfolio-plugin'), $action),
+                    'project_id' => $project_id > 0 ? $project_id : $result
+                ));
+            } else {
+                global $wpdb;
+                wp_send_json_error(array(
+                    'message' => __('Error al guardar el proyecto', 'portfolio-plugin'),
+                    'error' => $wpdb->last_error
+                ));
+            }
+        } catch (Exception $e) {
             wp_send_json_error(array(
-                'message' => __('Error al guardar el proyecto', 'portfolio-plugin')
+                'message' => __('Error al guardar el proyecto', 'portfolio-plugin'),
+                'error' => $e->getMessage()
             ));
         }
     }
@@ -353,13 +377,15 @@ class PortfolioAdmin {
             'id' => $project->id,
             'title' => $project->title,
             'description' => $project->description,
-            'content' => $project->content,
             'featured_image' => $project->featured_image,
             'gallery' => $project->gallery ? unserialize($project->gallery) : array(),
             'category_id' => $project->category_id,
             'status' => $project->status,
             'featured' => $project->featured,
             'external_url' => $project->external_url,
+            'youtube_url' => $project->youtube_url ?? '',
+            'vimeo_url' => $project->vimeo_url ?? '',
+            'project_year' => $project->project_year,
             'project_date' => $project->project_date
         );
         

@@ -60,7 +60,6 @@ class PortfolioDatabase {
             title varchar(255) NOT NULL,
             slug varchar(255) NOT NULL,
             description text,
-            content longtext,
             featured_image varchar(500),
             gallery text,
             category_id int(11),
@@ -69,6 +68,9 @@ class PortfolioDatabase {
             views int(11) DEFAULT 0,
             likes int(11) DEFAULT 0,
             external_url varchar(500),
+            youtube_url varchar(500),
+            vimeo_url varchar(500),
+            project_year varchar(4),
             project_date date,
             created_at datetime DEFAULT CURRENT_TIMESTAMP,
             updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -224,11 +226,11 @@ class PortfolioDatabase {
             'title' => 'Proyecto de Ejemplo',
             'slug' => 'proyecto-ejemplo',
             'description' => 'Este es un proyecto de ejemplo que demuestra las capacidades del plugin Portfolio. Puedes editarlo o eliminarlo desde el panel de administración.',
-            'content' => '<h3>Descripción Detallada</h3><p>Este proyecto muestra cómo funciona el sistema de portafolio. Incluye:</p><ul><li>Gestión de proyectos</li><li>Categorización</li><li>Galería de imágenes</li><li>Estadísticas de vistas y likes</li><li>Integración con Elementor</li></ul><p>¡Explora todas las funcionalidades del plugin!</p>',
             'category_id' => 1, // Desarrollo Web
             'status' => 'published',
             'featured' => 1,
             'external_url' => 'https://ejemplo.com',
+            'project_year' => date('Y'),
             'project_date' => date('Y-m-d'),
             'views' => 0,
             'likes' => 0
@@ -466,13 +468,15 @@ class PortfolioDatabase {
             'title' => '',
             'slug' => '',
             'description' => '',
-            'content' => '',
             'featured_image' => '',
             'gallery' => '',
             'category_id' => null,
             'status' => 'published',
             'featured' => 0,
             'external_url' => '',
+            'youtube_url' => '',
+            'vimeo_url' => '',
+            'project_year' => null,
             'project_date' => current_time('Y-m-d')
         );
         

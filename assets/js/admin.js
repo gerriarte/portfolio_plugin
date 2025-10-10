@@ -5,6 +5,9 @@
 jQuery(document).ready(function($) {
     'use strict';
     
+    console.log('Portfolio Admin JS: Cargado correctamente');
+    console.log('jQuery version:', $.fn.jquery);
+    
     // Variables globales
     let currentProjectId = null;
     let currentCategoryId = null;
@@ -32,12 +35,14 @@ jQuery(document).ready(function($) {
         // Botones de editar
         $(document).on('click', '.edit-project', function() {
             const projectId = $(this).data('project-id');
-            editProject(projectId);
+            console.log('Editando proyecto:', projectId);
+            openProjectModal(projectId);
         });
         
         $(document).on('click', '.edit-category', function() {
             const categoryId = $(this).data('category-id');
-            editCategory(categoryId);
+            console.log('Editando categoría:', categoryId);
+            openCategoryModal(categoryId);
         });
         
         // Botones de eliminar
@@ -57,10 +62,19 @@ jQuery(document).ready(function($) {
         });
         
         $('.modal-save').on('click', function() {
+            console.log('=== CLICK EN BOTÓN GUARDAR ===');
+            console.log('Botón clickeado:', this);
+            console.log('Closest #project-modal:', $(this).closest('#project-modal').length);
+            console.log('Closest #category-modal:', $(this).closest('#category-modal').length);
+            
             if ($(this).closest('#project-modal').length) {
+                console.log('→ Guardando PROYECTO');
                 saveProject();
             } else if ($(this).closest('#category-modal').length) {
+                console.log('→ Guardando CATEGORÍA');
                 saveCategory();
+            } else {
+                console.error('→ ERROR: No se encontró modal padre');
             }
         });
         
@@ -273,11 +287,13 @@ jQuery(document).ready(function($) {
                     $('#project-id').val(project.id);
                     $('#project-title').val(project.title);
                     $('#project-description').val(project.description);
-                    $('#project-content').val(project.content);
                     $('#project-category').val(project.category_id);
                     $('#project-status').val(project.status);
                     $('#project-featured').prop('checked', project.featured == 1);
                     $('#project-url').val(project.external_url);
+                    $('#project-youtube').val(project.youtube_url || '');
+                    $('#project-vimeo').val(project.vimeo_url || '');
+                    $('#project-year').val(project.project_year || new Date().getFullYear());
                     $('#project-date').val(project.project_date);
                     
                     // Cargar imagen destacada
@@ -322,6 +338,8 @@ jQuery(document).ready(function($) {
     function resetProjectForm() {
         $('#project-form')[0].reset();
         $('#project-id').val('');
+        $('#project-youtube').val('');
+        $('#project-vimeo').val('');
         $('.image-preview').hide();
         $('.gallery-preview').empty();
     }
@@ -335,19 +353,45 @@ jQuery(document).ready(function($) {
     }
     
     function saveProject() {
+        console.log('=== INICIO GUARDADO DE PROYECTO ===');
+        
+        // Validar que el formulario existe
+        if ($('#project-form').length === 0) {
+            console.error('ERROR: Formulario no encontrado');
+            showNotification('Error: Formulario no encontrado', 'error');
+            return;
+        }
+        
+        // Validar título
+        const title = $('#project-title').val();
+        if (!title || title.trim() === '') {
+            console.error('ERROR: Título vacío');
+            showNotification('El título del proyecto es requerido', 'error');
+            return;
+        }
+        
+        console.log('Título del proyecto:', title);
+        console.log('ID del proyecto actual:', currentProjectId);
+        
         const formData = new FormData($('#project-form')[0]);
         formData.append('action', 'portfolio_save_project');
         formData.append('nonce', portfolio_admin.nonce);
         
         if (currentProjectId) {
             formData.append('project_id', currentProjectId);
+            console.log('Modo: EDITAR proyecto #' + currentProjectId);
+        } else {
+            console.log('Modo: CREAR nuevo proyecto');
         }
         
         // Procesar galería desde el campo hidden
         const galleryValue = $('#project-gallery').val();
+        console.log('Valor de galería:', galleryValue);
+        
         if (galleryValue) {
             try {
                 const galleryArray = JSON.parse(galleryValue);
+                console.log('Galería parseada:', galleryArray);
                 galleryArray.forEach(function(url, index) {
                     formData.append('gallery[' + index + ']', url);
                 });
@@ -356,6 +400,11 @@ jQuery(document).ready(function($) {
             }
         }
         
+        // Debug: Mostrar todos los datos
+        console.log('FormData keys:', Array.from(formData.keys()));
+        console.log('AJAX URL:', portfolio_admin.ajax_url);
+        console.log('Nonce:', portfolio_admin.nonce);
+        
         $.ajax({
             url: portfolio_admin.ajax_url,
             type: 'POST',
@@ -363,21 +412,44 @@ jQuery(document).ready(function($) {
             processData: false,
             contentType: false,
             beforeSend: function() {
-                $('.modal-save').prop('disabled', true).text(portfolio_admin.strings.saving);
+                console.log('Enviando solicitud AJAX...');
+                $('.modal-save').prop('disabled', true).text('Guardando...');
             },
             success: function(response) {
+                console.log('=== RESPUESTA RECIBIDA ===');
+                console.log('Response completo:', response);
+                console.log('Response.success:', response.success);
+                console.log('Response.data:', response.data);
+                
                 if (response.success) {
-                    showNotification(portfolio_admin.strings.saved, 'success');
+                    console.log('✅ GUARDADO EXITOSO');
+                    showNotification(response.data.message || 'Proyecto guardado exitosamente', 'success');
                     closeModal();
-                    location.reload(); // Recargar para mostrar cambios
+                    setTimeout(function() {
+                        console.log('Recargando página...');
+                        location.reload();
+                    }, 500);
                 } else {
-                    showNotification(response.data.message || portfolio_admin.strings.error, 'error');
+                    console.error('❌ ERROR AL GUARDAR');
+                    var errorMsg = response.data.message || 'Error al guardar el proyecto';
+                    if (response.data.error) {
+                        errorMsg += ': ' + response.data.error;
+                        console.error('Error específico:', response.data.error);
+                    }
+                    showNotification(errorMsg, 'error');
                 }
             },
-            error: function() {
-                showNotification(portfolio_admin.strings.error, 'error');
+            error: function(xhr, status, error) {
+                console.error('=== ERROR DE AJAX ===');
+                console.error('XHR:', xhr);
+                console.error('Status:', status);
+                console.error('Error:', error);
+                console.error('Response Text:', xhr.responseText);
+                
+                showNotification('Error de conexión al guardar. Revisa la consola para más detalles.', 'error');
             },
             complete: function() {
+                console.log('=== SOLICITUD COMPLETADA ===');
                 $('.modal-save').prop('disabled', false).text('Guardar Proyecto');
             }
         });

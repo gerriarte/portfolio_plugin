@@ -168,13 +168,27 @@ if (!defined('ABSPATH')) {
                 <input type="url" id="project-url" name="external_url" placeholder="https://ejemplo.com">
             </div>
             
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="project-youtube"><?php _e('Video de YouTube', 'portfolio-plugin'); ?></label>
+                    <input type="url" id="project-youtube" name="youtube_url" placeholder="https://www.youtube.com/watch?v=...">
+                    <small><?php _e('Ingresa la URL completa del video de YouTube', 'portfolio-plugin'); ?></small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="project-vimeo"><?php _e('Video de Vimeo', 'portfolio-plugin'); ?></label>
+                    <input type="url" id="project-vimeo" name="vimeo_url" placeholder="https://vimeo.com/...">
+                    <small><?php _e('Ingresa la URL completa del video de Vimeo', 'portfolio-plugin'); ?></small>
+                </div>
+            </div>
+            
             <div class="form-group">
-                <label for="project-gallery"><?php _e('Galería de Imágenes y Videos', 'portfolio-plugin'); ?></label>
+                <label for="project-gallery"><?php _e('Galería de Imágenes', 'portfolio-plugin'); ?></label>
                 <input type="hidden" id="project-gallery" name="gallery" value="">
                 <div class="gallery-upload">
                     <div class="gallery-preview"></div>
                     <button type="button" class="button upload-gallery-btn">
-                        <?php _e('Agregar Imágenes/Videos', 'portfolio-plugin'); ?>
+                        <?php _e('Agregar Imágenes', 'portfolio-plugin'); ?>
                     </button>
                 </div>
             </div>

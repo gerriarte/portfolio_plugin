@@ -190,6 +190,31 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
             ]
         );
         
+        $this->add_control(
+            'use_elementor_gallery',
+            [
+                'label' => __('Usar galería de Elementor', 'portfolio-plugin'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => __('Sí', 'portfolio-plugin'),
+                'label_off' => __('No', 'portfolio-plugin'),
+                'return_value' => 'yes',
+                'default' => 'no',
+                'description' => __('Si está habilitado, el modal mostrará una galería de Elementor en lugar de las imágenes del proyecto', 'portfolio-plugin'),
+            ]
+        );
+        
+        $this->add_control(
+            'elementor_gallery',
+            [
+                'label' => __('Galería de Elementor', 'portfolio-plugin'),
+                'type' => \Elementor\Controls_Manager::GALLERY,
+                'condition' => [
+                    'use_elementor_gallery' => 'yes',
+                ],
+                'description' => __('Selecciona las imágenes que se mostrarán en el modal', 'portfolio-plugin'),
+            ]
+        );
+        
         $this->end_controls_section();
         
         // Sección de Estilo
@@ -277,12 +302,13 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
             ]
         );
         
-        $this->add_group_control(
-            \Elementor\Group_Control_Typography::get_type(),
+        // Título del modal
+        $this->add_control(
+            'modal_title_heading',
             [
-                'name' => 'modal_title_typography',
-                'label' => __('Tipografía del título', 'portfolio-plugin'),
-                'selector' => '#pf-modal #pf-title',
+                'label' => __('Título del Modal', 'portfolio-plugin'),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
             ]
         );
         
@@ -295,12 +321,50 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
             ]
         );
         
-        $this->add_group_control(
-            \Elementor\Group_Control_Typography::get_type(),
+        $this->add_control(
+            'modal_title_size',
             [
-                'name' => 'modal_text_typography',
-                'label' => __('Tipografía del texto', 'portfolio-plugin'),
-                'selector' => '#pf-modal #pf-desc',
+                'label' => __('Tamaño del título', 'portfolio-plugin'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 14,
+                        'max' => 60,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 28,
+                ],
+            ]
+        );
+        
+        $this->add_control(
+            'modal_title_weight',
+            [
+                'label' => __('Peso del título', 'portfolio-plugin'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => '600',
+                'options' => [
+                    '300' => __('Light (300)', 'portfolio-plugin'),
+                    '400' => __('Normal (400)', 'portfolio-plugin'),
+                    '500' => __('Medium (500)', 'portfolio-plugin'),
+                    '600' => __('Semi Bold (600)', 'portfolio-plugin'),
+                    '700' => __('Bold (700)', 'portfolio-plugin'),
+                    '800' => __('Extra Bold (800)', 'portfolio-plugin'),
+                ],
+            ]
+        );
+        
+        // Texto del modal
+        $this->add_control(
+            'modal_text_heading',
+            [
+                'label' => __('Texto del Modal', 'portfolio-plugin'),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
             ]
         );
         
@@ -310,6 +374,26 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
                 'label' => __('Color del texto', 'portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#555555',
+            ]
+        );
+        
+        $this->add_control(
+            'modal_text_size',
+            [
+                'label' => __('Tamaño del texto', 'portfolio-plugin'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 12,
+                        'max' => 24,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 15,
+                ],
             ]
         );
         
@@ -391,15 +475,6 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
             ]
         );
         
-        $this->add_group_control(
-            \Elementor\Group_Control_Typography::get_type(),
-            [
-                'name' => 'modal_button_typography',
-                'label' => __('Tipografía del botón', 'portfolio-plugin'),
-                'selector' => '#pf-external-link',
-            ]
-        );
-        
         $this->add_control(
             'modal_button_bg',
             [
@@ -428,6 +503,42 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         );
         
         $this->add_control(
+            'modal_button_size',
+            [
+                'label' => __('Tamaño del texto del botón', 'portfolio-plugin'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 12,
+                        'max' => 24,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 14,
+                ],
+            ]
+        );
+        
+        $this->add_control(
+            'modal_button_weight',
+            [
+                'label' => __('Peso del texto del botón', 'portfolio-plugin'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => '500',
+                'options' => [
+                    '300' => __('Light (300)', 'portfolio-plugin'),
+                    '400' => __('Normal (400)', 'portfolio-plugin'),
+                    '500' => __('Medium (500)', 'portfolio-plugin'),
+                    '600' => __('Semi Bold (600)', 'portfolio-plugin'),
+                    '700' => __('Bold (700)', 'portfolio-plugin'),
+                ],
+            ]
+        );
+        
+        $this->add_control(
             'modal_button_border_radius',
             [
                 'label' => __('Radio de borde del botón', 'portfolio-plugin'),
@@ -443,6 +554,82 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
                 'default' => [
                     'unit' => 'px',
                     'size' => 6,
+                ],
+            ]
+        );
+        
+        // Separador
+        $this->add_control(
+            'gallery_images_heading',
+            [
+                'label' => __('Imágenes de la Galería', 'portfolio-plugin'),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+        
+        $this->add_control(
+            'gallery_image_width',
+            [
+                'label' => __('Ancho de las imágenes', 'portfolio-plugin'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['%', 'px'],
+                'range' => [
+                    '%' => [
+                        'min' => 10,
+                        'max' => 100,
+                        'step' => 1,
+                    ],
+                    'px' => [
+                        'min' => 100,
+                        'max' => 1000,
+                        'step' => 10,
+                    ],
+                ],
+                'default' => [
+                    'unit' => '%',
+                    'size' => 100,
+                ],
+            ]
+        );
+        
+        $this->add_control(
+            'gallery_image_height',
+            [
+                'label' => __('Altura de las imágenes', 'portfolio-plugin'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', 'auto'],
+                'range' => [
+                    'px' => [
+                        'min' => 100,
+                        'max' => 800,
+                        'step' => 10,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'auto',
+                    'size' => '',
+                ],
+                'description' => __('Usa "auto" para mantener las proporciones originales de las imágenes', 'portfolio-plugin'),
+            ]
+        );
+        
+        $this->add_control(
+            'gallery_spacing',
+            [
+                'label' => __('Espacio entre imágenes', 'portfolio-plugin'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 50,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 15,
                 ],
             ]
         );
@@ -482,7 +669,10 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         // Estilos del modal como data attributes
         $modal_bg = !empty($settings['modal_background']) ? $settings['modal_background'] : '#FFFFFF';
         $modal_title_color = !empty($settings['modal_title_color']) ? $settings['modal_title_color'] : '#333333';
+        $modal_title_size = !empty($settings['modal_title_size']['size']) ? $settings['modal_title_size']['size'] . 'px' : '28px';
+        $modal_title_weight = !empty($settings['modal_title_weight']) ? $settings['modal_title_weight'] : '600';
         $modal_text_color = !empty($settings['modal_text_color']) ? $settings['modal_text_color'] : '#555555';
+        $modal_text_size = !empty($settings['modal_text_size']['size']) ? $settings['modal_text_size']['size'] . 'px' : '15px';
         $modal_border_radius = !empty($settings['modal_border_radius']['size']) ? $settings['modal_border_radius']['size'] . 'px' : '12px';
         
         // Estilos del badge de categoría
@@ -494,7 +684,27 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $button_bg = !empty($settings['modal_button_bg']) ? $settings['modal_button_bg'] : '#2196F3';
         $button_text_color = !empty($settings['modal_button_text_color']) ? $settings['modal_button_text_color'] : '#FFFFFF';
         $button_hover_bg = !empty($settings['modal_button_hover_bg']) ? $settings['modal_button_hover_bg'] : '#1976D2';
+        $button_size = !empty($settings['modal_button_size']['size']) ? $settings['modal_button_size']['size'] . 'px' : '14px';
+        $button_weight = !empty($settings['modal_button_weight']) ? $settings['modal_button_weight'] : '500';
         $button_border_radius = !empty($settings['modal_button_border_radius']['size']) ? $settings['modal_button_border_radius']['size'] . 'px' : '6px';
+        
+        // Tamaños de imágenes de galería
+        $gallery_image_width = !empty($settings['gallery_image_width']['size']) ? $settings['gallery_image_width']['size'] . $settings['gallery_image_width']['unit'] : '100%';
+        
+        // Para altura: si es 'auto' o no tiene size, usar 'auto'
+        if (!empty($settings['gallery_image_height']['unit']) && $settings['gallery_image_height']['unit'] === 'auto') {
+            $gallery_image_height = 'auto';
+        } elseif (!empty($settings['gallery_image_height']['size'])) {
+            $gallery_image_height = $settings['gallery_image_height']['size'] . $settings['gallery_image_height']['unit'];
+        } else {
+            $gallery_image_height = 'auto';
+        }
+        
+        $gallery_spacing = !empty($settings['gallery_spacing']['size']) ? $settings['gallery_spacing']['size'] . 'px' : '15px';
+        
+        // Configuración de galería de Elementor
+        $use_elementor_gallery = $settings['use_elementor_gallery'] === 'yes';
+        $elementor_gallery = !empty($settings['elementor_gallery']) ? $settings['elementor_gallery'] : array();
         
         ?>
         <div class="portfolio-elementor-widget" 
@@ -502,7 +712,10 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
              data-modal="<?php echo $enable_modal ? 'true' : 'false'; ?>"
              data-modal-bg="<?php echo esc_attr($modal_bg); ?>"
              data-modal-title-color="<?php echo esc_attr($modal_title_color); ?>"
+             data-modal-title-size="<?php echo esc_attr($modal_title_size); ?>"
+             data-modal-title-weight="<?php echo esc_attr($modal_title_weight); ?>"
              data-modal-text-color="<?php echo esc_attr($modal_text_color); ?>"
+             data-modal-text-size="<?php echo esc_attr($modal_text_size); ?>"
              data-modal-border-radius="<?php echo esc_attr($modal_border_radius); ?>"
              data-category-bg="<?php echo esc_attr($category_bg); ?>"
              data-category-text-color="<?php echo esc_attr($category_text_color); ?>"
@@ -510,7 +723,14 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
              data-button-bg="<?php echo esc_attr($button_bg); ?>"
              data-button-text-color="<?php echo esc_attr($button_text_color); ?>"
              data-button-hover-bg="<?php echo esc_attr($button_hover_bg); ?>"
-             data-button-border-radius="<?php echo esc_attr($button_border_radius); ?>">
+             data-button-size="<?php echo esc_attr($button_size); ?>"
+             data-button-weight="<?php echo esc_attr($button_weight); ?>"
+             data-button-border-radius="<?php echo esc_attr($button_border_radius); ?>"
+             data-gallery-image-width="<?php echo esc_attr($gallery_image_width); ?>"
+             data-gallery-image-height="<?php echo esc_attr($gallery_image_height); ?>"
+             data-gallery-spacing="<?php echo esc_attr($gallery_spacing); ?>"
+             data-use-elementor-gallery="<?php echo $use_elementor_gallery ? 'true' : 'false'; ?>"
+             data-elementor-gallery="<?php echo esc_attr(json_encode($elementor_gallery)); ?>">
             
             <?php if ($settings['show_title'] === 'yes' && !empty($settings['title_text'])): ?>
                 <h2 class="portfolio-widget-title"><?php echo esc_html($settings['title_text']); ?></h2>
