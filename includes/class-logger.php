@@ -1,13 +1,16 @@
 <?php
 /**
  * Sistema de logging estructurado para el plugin Portfolio
+ * 
+ * @package Sabsfe_Portfolio
+ * @since 1.0.0
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-class PortfolioLogger {
+class Sabsfe_Portfolio_Logger {
     
     private static $instance = null;
     private $log_file = null;
@@ -21,7 +24,7 @@ class PortfolioLogger {
     
     private function __construct() {
         $upload_dir = wp_upload_dir();
-        $this->log_file = $upload_dir['basedir'] . '/portfolio-plugin-logs.log';
+        $this->log_file = $upload_dir['basedir'] . '/sabsfe-portfolio-plugin-logs.log';
     }
     
     /**

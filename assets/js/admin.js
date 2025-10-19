@@ -20,6 +20,7 @@ jQuery(document).ready(function($) {
         initColorPicker();
         initImageUpload();
         initGalleryUpload();
+        initGallerySortable();
     }
     
     function bindEvents() {
@@ -97,6 +98,11 @@ jQuery(document).ready(function($) {
                 closeModal();
             }
         });
+        
+        // Botón crear tablas
+        $('#create-tables').on('click', function() {
+            createTables();
+        });
     }
     
     function initColorPicker() {
@@ -127,9 +133,9 @@ jQuery(document).ready(function($) {
             const input = button.siblings('input[type="hidden"]');
             
             const frame = wp.media({
-                title: portfolio_admin.strings.select_image || 'Seleccionar Imagen',
+                title: sabsfe_portfolio_admin.strings.select_image || 'Seleccionar Imagen',
                 button: {
-                    text: portfolio_admin.strings.use_image || 'Usar esta imagen'
+                    text: sabsfe_portfolio_admin.strings.use_image || 'Usar esta imagen'
                 },
                 multiple: false
             });
@@ -229,10 +235,52 @@ jQuery(document).ready(function($) {
                 // Actualizar campo hidden con las URLs
                 $('#project-gallery').val(JSON.stringify(galleryUrls));
                 console.log('Galería actualizada:', galleryUrls);
+                
+                // Refrescar sortable después de agregar imágenes
+                setTimeout(function() {
+                    refreshGallerySortable();
+                }, 100);
             });
             
             frame.open();
         });
+    }
+    
+    function initGallerySortable() {
+        // Hacer la galería sortable (arrastrable)
+        $('.gallery-preview').sortable({
+            items: '.gallery-item',
+            cursor: 'grabbing',
+            opacity: 0.8,
+            placeholder: 'ui-sortable-placeholder',
+            tolerance: 'pointer',
+            forcePlaceholderSize: true,
+            helper: 'clone',
+            start: function(e, ui) {
+                ui.placeholder.height(ui.item.height());
+                ui.placeholder.width(ui.item.width());
+                console.log('Iniciando arrastre de imagen');
+            },
+            stop: function(e, ui) {
+                console.log('Imagen reordenada');
+                // Actualizar campo hidden con el nuevo orden
+                updateGalleryField();
+            },
+            update: function(e, ui) {
+                console.log('Orden actualizado');
+            }
+        });
+        
+        console.log('Galería sortable inicializada');
+    }
+    
+    function refreshGallerySortable() {
+        // Refrescar sortable si ya existe
+        if ($('.gallery-preview').hasClass('ui-sortable')) {
+            $('.gallery-preview').sortable('refresh');
+        } else {
+            initGallerySortable();
+        }
     }
     
     function openProjectModal(projectId = null) {
@@ -272,12 +320,12 @@ jQuery(document).ready(function($) {
     function loadProjectData(projectId) {
         // Cargar datos del proyecto desde el servidor
         $.ajax({
-            url: portfolio_admin.ajax_url,
+            url: sabsfe_portfolio_admin.ajax_url,
             type: 'POST',
             data: {
-                action: 'portfolio_get_project_for_edit',
+                action: 'sabsfe_portfolio_get_project_for_edit',
                 project_id: projectId,
-                nonce: portfolio_admin.nonce
+                nonce: sabsfe_portfolio_admin.nonce
             },
             success: function(response) {
                 if (response.success) {
@@ -308,14 +356,24 @@ jQuery(document).ready(function($) {
                         $('.gallery-preview').empty();
                         project.gallery.forEach(function(mediaUrl) {
                             var isVideo = mediaUrl.toLowerCase().match(/\.(mp4|webm|ogg|avi|mov)$/);
+                            var galleryItem = $('<div class="gallery-item">').attr('data-url', mediaUrl);
+                            
                             if (isVideo) {
-                                $('.gallery-preview').append('<div class="gallery-item"><video src="' + mediaUrl + '" controls></video><button type="button" class="remove-gallery-item">&times;</button></div>');
+                                galleryItem.append('<video src="' + mediaUrl + '" controls></video>');
                             } else {
-                                $('.gallery-preview').append('<div class="gallery-item"><img src="' + mediaUrl + '" alt="Gallery"><button type="button" class="remove-gallery-item">&times;</button></div>');
+                                galleryItem.append('<img src="' + mediaUrl + '" alt="Gallery">');
                             }
+                            
+                            galleryItem.append('<button type="button" class="remove-gallery-item">&times;</button>');
+                            $('.gallery-preview').append(galleryItem);
                         });
                         // Guardar en campo hidden
                         $('#project-gallery').val(JSON.stringify(project.gallery));
+                        
+                        // Refrescar sortable después de cargar galería
+                        setTimeout(function() {
+                            refreshGallerySortable();
+                        }, 100);
                     }
                 } else {
                     showNotification('Error al cargar los datos del proyecto', 'error');
@@ -341,7 +399,18 @@ jQuery(document).ready(function($) {
         $('#project-youtube').val('');
         $('#project-vimeo').val('');
         $('.image-preview').hide();
+        
+        // Destruir sortable si existe antes de limpiar
+        if ($('.gallery-preview').hasClass('ui-sortable')) {
+            $('.gallery-preview').sortable('destroy');
+        }
+        
         $('.gallery-preview').empty();
+        
+        // Reinicializar sortable
+        setTimeout(function() {
+            initGallerySortable();
+        }, 100);
     }
     
     function resetCategoryForm() {
@@ -374,8 +443,8 @@ jQuery(document).ready(function($) {
         console.log('ID del proyecto actual:', currentProjectId);
         
         const formData = new FormData($('#project-form')[0]);
-        formData.append('action', 'portfolio_save_project');
-        formData.append('nonce', portfolio_admin.nonce);
+        formData.append('action', 'sabsfe_portfolio_save_project');
+        formData.append('nonce', sabsfe_portfolio_admin.nonce);
         
         if (currentProjectId) {
             formData.append('project_id', currentProjectId);
@@ -402,11 +471,11 @@ jQuery(document).ready(function($) {
         
         // Debug: Mostrar todos los datos
         console.log('FormData keys:', Array.from(formData.keys()));
-        console.log('AJAX URL:', portfolio_admin.ajax_url);
-        console.log('Nonce:', portfolio_admin.nonce);
+        console.log('AJAX URL:', sabsfe_portfolio_admin.ajax_url);
+        console.log('Nonce:', sabsfe_portfolio_admin.nonce);
         
         $.ajax({
-            url: portfolio_admin.ajax_url,
+            url: sabsfe_portfolio_admin.ajax_url,
             type: 'POST',
             data: formData,
             processData: false,
@@ -457,33 +526,33 @@ jQuery(document).ready(function($) {
     
     function saveCategory() {
         const formData = new FormData($('#category-form')[0]);
-        formData.append('action', 'portfolio_save_category');
-        formData.append('nonce', portfolio_admin.nonce);
+        formData.append('action', 'sabsfe_portfolio_save_category');
+        formData.append('nonce', sabsfe_portfolio_admin.nonce);
         
         if (currentCategoryId) {
             formData.append('category_id', currentCategoryId);
         }
         
         $.ajax({
-            url: portfolio_admin.ajax_url,
+            url: sabsfe_portfolio_admin.ajax_url,
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
             beforeSend: function() {
-                $('.modal-save').prop('disabled', true).text(portfolio_admin.strings.saving);
+                $('.modal-save').prop('disabled', true).text(sabsfe_portfolio_admin.strings.saving);
             },
             success: function(response) {
                 if (response.success) {
-                    showNotification(portfolio_admin.strings.saved, 'success');
+                    showNotification(sabsfe_portfolio_admin.strings.saved, 'success');
                     closeModal();
                     location.reload(); // Recargar para mostrar cambios
                 } else {
-                    showNotification(response.data.message || portfolio_admin.strings.error, 'error');
+                    showNotification(response.data.message || sabsfe_portfolio_admin.strings.error, 'error');
                 }
             },
             error: function() {
-                showNotification(portfolio_admin.strings.error, 'error');
+                showNotification(sabsfe_portfolio_admin.strings.error, 'error');
             },
             complete: function() {
                 $('.modal-save').prop('disabled', false).text('Guardar Categoría');
@@ -492,17 +561,17 @@ jQuery(document).ready(function($) {
     }
     
     function deleteProject(projectId) {
-        if (!confirm(portfolio_admin.strings.confirm_delete)) {
+        if (!confirm(sabsfe_portfolio_admin.strings.confirm_delete)) {
             return;
         }
         
         $.ajax({
-            url: portfolio_admin.ajax_url,
+            url: sabsfe_portfolio_admin.ajax_url,
             type: 'POST',
             data: {
-                action: 'portfolio_delete_project',
+                action: 'sabsfe_portfolio_delete_project',
                 project_id: projectId,
-                nonce: portfolio_admin.nonce
+                nonce: sabsfe_portfolio_admin.nonce
             },
             success: function(response) {
                 if (response.success) {
@@ -521,17 +590,17 @@ jQuery(document).ready(function($) {
     }
     
     function deleteCategory(categoryId) {
-        if (!confirm(portfolio_admin.strings.confirm_delete)) {
+        if (!confirm(sabsfe_portfolio_admin.strings.confirm_delete)) {
             return;
         }
         
         $.ajax({
-            url: portfolio_admin.ajax_url,
+            url: sabsfe_portfolio_admin.ajax_url,
             type: 'POST',
             data: {
-                action: 'portfolio_delete_category',
+                action: 'sabsfe_portfolio_delete_category',
                 category_id: categoryId,
-                nonce: portfolio_admin.nonce
+                nonce: sabsfe_portfolio_admin.nonce
             },
             success: function(response) {
                 if (response.success) {
@@ -583,6 +652,52 @@ jQuery(document).ready(function($) {
             notification.fadeOut(300, function() {
                 $(this).remove();
             });
+        });
+    }
+    
+    function createTables() {
+        const button = $('#create-tables');
+        const originalText = button.text();
+        
+        // Deshabilitar botón y mostrar loading
+        button.prop('disabled', true).text('Creando tablas...');
+        
+        $.ajax({
+            url: sabsfe_portfolio_admin.ajax_url,
+            type: 'POST',
+            data: {
+                action: 'sabsfe_portfolio_create_tables',
+                nonce: sabsfe_portfolio_admin.nonce
+            },
+            success: function(response) {
+                if (response.success) {
+                    showNotification('✅ Tablas creadas exitosamente', 'success');
+                    
+                    // Mostrar información de las tablas
+                    let message = response.data.message + '\n\n';
+                    message += 'Estado de las tablas:\n';
+                    for (const [table, status] of Object.entries(response.data.tables)) {
+                        if (status.exists) {
+                            message += `✅ ${table}: ${status.count} registros\n`;
+                        } else {
+                            message += `❌ ${table}: NO EXISTE\n`;
+                        }
+                    }
+                    
+                    console.log('Tablas creadas:', response.data.tables);
+                } else {
+                    showNotification('❌ Error: ' + response.data, 'error');
+                    console.error('Error al crear tablas:', response.data);
+                }
+            },
+            error: function(xhr, status, error) {
+                showNotification('❌ Error de conexión al crear tablas', 'error');
+                console.error('Error AJAX:', error);
+            },
+            complete: function() {
+                // Restaurar botón
+                button.prop('disabled', false).text(originalText);
+            }
         });
     }
 });

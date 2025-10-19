@@ -9,9 +9,9 @@ if (!defined('ABSPATH')) {
 ?>
 
 <div class="wrap portfolio-admin">
-    <h1 class="wp-heading-inline"><?php _e('Categorías del Portafolio', 'portfolio-plugin'); ?></h1>
+    <h1 class="wp-heading-inline"><?php _e('Categorías del Portafolio', 'sabsfe-portfolio-plugin'); ?></h1>
     <button type="button" class="page-title-action" id="add-new-category">
-        <?php _e('Agregar Nueva', 'portfolio-plugin'); ?>
+        <?php _e('Agregar Nueva', 'sabsfe-portfolio-plugin'); ?>
     </button>
     <hr class="wp-header-end">
 
@@ -51,10 +51,10 @@ if (!defined('ABSPATH')) {
             <div class="no-categories">
                 <div class="no-categories-content">
                     <span class="dashicons dashicons-category"></span>
-                    <h3><?php _e('No hay categorías aún', 'portfolio-plugin'); ?></h3>
-                    <p><?php _e('Comienza agregando tu primera categoría para organizar los proyectos.', 'portfolio-plugin'); ?></p>
+                    <h3><?php _e('No hay categorías aún', 'sabsfe-portfolio-plugin'); ?></h3>
+                    <p><?php _e('Comienza agregando tu primera categoría para organizar los proyectos.', 'sabsfe-portfolio-plugin'); ?></p>
                     <button type="button" class="button button-primary" id="add-first-category">
-                        <?php _e('Agregar Primera Categoría', 'portfolio-plugin'); ?>
+                        <?php _e('Agregar Primera Categoría', 'sabsfe-portfolio-plugin'); ?>
                     </button>
                 </div>
             </div>
@@ -66,7 +66,7 @@ if (!defined('ABSPATH')) {
 <div id="category-modal" class="portfolio-modal" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 id="category-modal-title"><?php _e('Agregar Nueva Categoría', 'portfolio-plugin'); ?></h2>
+            <h2 id="category-modal-title"><?php _e('Agregar Nueva Categoría', 'sabsfe-portfolio-plugin'); ?></h2>
             <button type="button" class="modal-close">
                 <span class="dashicons dashicons-no-alt"></span>
             </button>
@@ -76,17 +76,17 @@ if (!defined('ABSPATH')) {
             <input type="hidden" id="category-id" name="category_id" value="">
             
             <div class="form-group">
-                <label for="category-name"><?php _e('Nombre de la Categoría', 'portfolio-plugin'); ?> *</label>
+                <label for="category-name"><?php _e('Nombre de la Categoría', 'sabsfe-portfolio-plugin'); ?> *</label>
                 <input type="text" id="category-name" name="name" required>
             </div>
             
             <div class="form-group">
-                <label for="category-description"><?php _e('Descripción', 'portfolio-plugin'); ?></label>
+                <label for="category-description"><?php _e('Descripción', 'sabsfe-portfolio-plugin'); ?></label>
                 <textarea id="category-description" name="description" rows="3"></textarea>
             </div>
             
             <div class="form-group">
-                <label for="category-color"><?php _e('Color de la Categoría', 'portfolio-plugin'); ?></label>
+                <label for="category-color"><?php _e('Color de la Categoría', 'sabsfe-portfolio-plugin'); ?></label>
                 <div class="color-picker-wrapper">
                     <input type="color" id="category-color" name="color" value="#2196F3">
                     <div class="color-presets">
@@ -103,10 +103,10 @@ if (!defined('ABSPATH')) {
         
         <div class="modal-footer">
             <button type="button" class="button modal-cancel">
-                <?php _e('Cancelar', 'portfolio-plugin'); ?>
+                <?php _e('Cancelar', 'sabsfe-portfolio-plugin'); ?>
             </button>
             <button type="button" class="button button-primary modal-save">
-                <?php _e('Guardar Categoría', 'portfolio-plugin'); ?>
+                <?php _e('Guardar Categoría', 'sabsfe-portfolio-plugin'); ?>
             </button>
         </div>
     </div>

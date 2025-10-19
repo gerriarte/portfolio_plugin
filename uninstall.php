@@ -28,8 +28,8 @@ if (!$keep_data) {
     global $wpdb;
     
     $tables = array(
-        $wpdb->prefix . 'portfolio_projects',
-        $wpdb->prefix . 'portfolio_categories'
+        $wpdb->prefix . 'sabsfe_portfolio_projects',
+        $wpdb->prefix . 'sabsfe_portfolio_categories'
     );
     
     foreach ($tables as $table) {
@@ -38,7 +38,7 @@ if (!$keep_data) {
     
     // Eliminar opciones del plugin
     $options_to_delete = array(
-        'portfolio_plugin_options',
+        'sabsfe_portfolio_plugin_options',
         'portfolio_keep_data_on_uninstall',
         'portfolio_version'
     );
@@ -77,7 +77,7 @@ if (!$keep_data) {
 } else {
     
     // Solo eliminar configuraciones, mantener datos
-    delete_option('portfolio_plugin_options');
+    delete_option('sabsfe_portfolio_plugin_options');
     delete_option('portfolio_version');
     
     if (function_exists('error_log')) {

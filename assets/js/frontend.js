@@ -159,22 +159,22 @@
         $('#pf-desc').text('Cargando información...');
         
         // Verificar datos para AJAX
-        if (typeof portfolio_frontend === 'undefined') {
-            console.error('portfolio_frontend no disponible');
+        if (typeof sabsfe_portfolio_frontend === 'undefined') {
+            console.error('sabsfe_portfolio_frontend no disponible');
             showError('Error de configuración');
             return;
         }
         
-        console.log('AJAX URL:', portfolio_frontend.ajax_url);
+        console.log('AJAX URL:', sabsfe_portfolio_frontend.ajax_url);
         
         // Llamada AJAX
         $.ajax({
-            url: portfolio_frontend.ajax_url,
+            url: sabsfe_portfolio_frontend.ajax_url,
             type: 'POST',
             data: {
-                action: 'portfolio_get_project',
+                action: 'sabsfe_portfolio_get_project',
                 project_id: projectId,
-                nonce: portfolio_frontend.nonce
+                nonce: sabsfe_portfolio_frontend.nonce
             },
             timeout: 15000,
             success: function(response) {
@@ -536,7 +536,7 @@
     window.pfDebug = function() {
         console.log('=== DEBUG PORTFOLIO ===');
         console.log('jQuery:', typeof $ !== 'undefined');
-        console.log('portfolio_frontend:', typeof portfolio_frontend !== 'undefined');
+        console.log('sabsfe_portfolio_frontend:', typeof sabsfe_portfolio_frontend !== 'undefined');
         console.log('Botones:', $('.portfolio-view-btn').length);
         console.log('Modal creado:', modalCreated);
         console.log('Modal visible:', $('#pf-modal').is(':visible'));

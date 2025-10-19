@@ -1,20 +1,23 @@
 <?php
 /**
  * Widget de Elementor para Portfolio
+ * 
+ * @package Sabsfe_Portfolio
+ * @since 1.0.0
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-class PortfolioElementorWidget extends \Elementor\Widget_Base {
+class Sabsfe_Portfolio_Elementor_Widget extends \Elementor\Widget_Base {
     
     public function get_name() {
-        return 'portfolio-grid';
+        return 'sabsfe-portfolio-grid';
     }
     
     public function get_title() {
-        return __('Portfolio Grid', 'portfolio-plugin');
+        return __('Portfolio Grid', 'sabsfe-portfolio-plugin');
     }
     
     public function get_icon() {
@@ -35,7 +38,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'content_section',
             [
-                'label' => __('Contenido', 'portfolio-plugin'),
+                'label' => __('Contenido', 'sabsfe-portfolio-plugin'),
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -43,10 +46,10 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_title',
             [
-                'label' => __('Mostrar Título', 'portfolio-plugin'),
+                'label' => __('Mostrar Título', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SWITCHER,
-                'label_on' => __('Mostrar', 'portfolio-plugin'),
-                'label_off' => __('Ocultar', 'portfolio-plugin'),
+                'label_on' => __('Mostrar', 'sabsfe-portfolio-plugin'),
+                'label_off' => __('Ocultar', 'sabsfe-portfolio-plugin'),
                 'return_value' => 'yes',
                 'default' => 'yes',
             ]
@@ -55,9 +58,9 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'title_text',
             [
-                'label' => __('Título', 'portfolio-plugin'),
+                'label' => __('Título', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::TEXT,
-                'default' => __('Portfolio', 'portfolio-plugin'),
+                'default' => __('Portfolio', 'sabsfe-portfolio-plugin'),
                 'condition' => [
                     'show_title' => 'yes',
                 ],
@@ -67,7 +70,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'items_per_page',
             [
-                'label' => __('Proyectos por página', 'portfolio-plugin'),
+                'label' => __('Proyectos por página', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::NUMBER,
                 'min' => 1,
                 'max' => 50,
@@ -79,7 +82,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'category_filter',
             [
-                'label' => __('Filtrar por categoría', 'portfolio-plugin'),
+                'label' => __('Filtrar por categoría', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SELECT2,
                 'options' => $this->get_categories_options(),
                 'multiple' => true,
@@ -90,10 +93,10 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_featured_only',
             [
-                'label' => __('Solo proyectos destacados', 'portfolio-plugin'),
+                'label' => __('Solo proyectos destacados', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SWITCHER,
-                'label_on' => __('Sí', 'portfolio-plugin'),
-                'label_off' => __('No', 'portfolio-plugin'),
+                'label_on' => __('Sí', 'sabsfe-portfolio-plugin'),
+                'label_off' => __('No', 'sabsfe-portfolio-plugin'),
                 'return_value' => 'yes',
                 'default' => 'no',
             ]
@@ -102,14 +105,14 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'order_by',
             [
-                'label' => __('Ordenar por', 'portfolio-plugin'),
+                'label' => __('Ordenar por', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'options' => [
-                    'created_at' => __('Fecha de creación', 'portfolio-plugin'),
-                    'project_date' => __('Fecha del proyecto', 'portfolio-plugin'),
-                    'title' => __('Título', 'portfolio-plugin'),
-                    'views' => __('Vistas', 'portfolio-plugin'),
-                    'likes' => __('Likes', 'portfolio-plugin'),
+                    'created_at' => __('Fecha de creación', 'sabsfe-portfolio-plugin'),
+                    'project_date' => __('Fecha del proyecto', 'sabsfe-portfolio-plugin'),
+                    'title' => __('Título', 'sabsfe-portfolio-plugin'),
+                    'views' => __('Vistas', 'sabsfe-portfolio-plugin'),
+                    'likes' => __('Likes', 'sabsfe-portfolio-plugin'),
                 ],
                 'default' => 'created_at',
             ]
@@ -118,11 +121,11 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'order',
             [
-                'label' => __('Orden', 'portfolio-plugin'),
+                'label' => __('Orden', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'options' => [
-                    'DESC' => __('Descendente', 'portfolio-plugin'),
-                    'ASC' => __('Ascendente', 'portfolio-plugin'),
+                    'DESC' => __('Descendente', 'sabsfe-portfolio-plugin'),
+                    'ASC' => __('Ascendente', 'sabsfe-portfolio-plugin'),
                 ],
                 'default' => 'DESC',
             ]
@@ -134,7 +137,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'design_section',
             [
-                'label' => __('Diseño', 'portfolio-plugin'),
+                'label' => __('Diseño', 'sabsfe-portfolio-plugin'),
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -142,7 +145,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'columns',
             [
-                'label' => __('Columnas', 'portfolio-plugin'),
+                'label' => __('Columnas', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'options' => [
                     '1' => '1',
@@ -157,10 +160,10 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_category',
             [
-                'label' => __('Mostrar categoría', 'portfolio-plugin'),
+                'label' => __('Mostrar categoría', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SWITCHER,
-                'label_on' => __('Mostrar', 'portfolio-plugin'),
-                'label_off' => __('Ocultar', 'portfolio-plugin'),
+                'label_on' => __('Mostrar', 'sabsfe-portfolio-plugin'),
+                'label_off' => __('Ocultar', 'sabsfe-portfolio-plugin'),
                 'return_value' => 'yes',
                 'default' => 'yes',
             ]
@@ -169,10 +172,10 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_stats',
             [
-                'label' => __('Mostrar estadísticas', 'portfolio-plugin'),
+                'label' => __('Mostrar estadísticas', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SWITCHER,
-                'label_on' => __('Mostrar', 'portfolio-plugin'),
-                'label_off' => __('Ocultar', 'portfolio-plugin'),
+                'label_on' => __('Mostrar', 'sabsfe-portfolio-plugin'),
+                'label_off' => __('Ocultar', 'sabsfe-portfolio-plugin'),
                 'return_value' => 'yes',
                 'default' => 'yes',
             ]
@@ -181,10 +184,10 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'enable_modal',
             [
-                'label' => __('Habilitar modal', 'portfolio-plugin'),
+                'label' => __('Habilitar modal', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SWITCHER,
-                'label_on' => __('Sí', 'portfolio-plugin'),
-                'label_off' => __('No', 'portfolio-plugin'),
+                'label_on' => __('Sí', 'sabsfe-portfolio-plugin'),
+                'label_off' => __('No', 'sabsfe-portfolio-plugin'),
                 'return_value' => 'yes',
                 'default' => 'yes',
             ]
@@ -193,25 +196,25 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'use_elementor_gallery',
             [
-                'label' => __('Usar galería de Elementor', 'portfolio-plugin'),
+                'label' => __('Usar galería de Elementor', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SWITCHER,
-                'label_on' => __('Sí', 'portfolio-plugin'),
-                'label_off' => __('No', 'portfolio-plugin'),
+                'label_on' => __('Sí', 'sabsfe-portfolio-plugin'),
+                'label_off' => __('No', 'sabsfe-portfolio-plugin'),
                 'return_value' => 'yes',
                 'default' => 'no',
-                'description' => __('Si está habilitado, el modal mostrará una galería de Elementor en lugar de las imágenes del proyecto', 'portfolio-plugin'),
+                'description' => __('Si está habilitado, el modal mostrará una galería de Elementor en lugar de las imágenes del proyecto', 'sabsfe-portfolio-plugin'),
             ]
         );
         
         $this->add_control(
             'elementor_gallery',
             [
-                'label' => __('Galería de Elementor', 'portfolio-plugin'),
+                'label' => __('Galería de Elementor', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::GALLERY,
                 'condition' => [
                     'use_elementor_gallery' => 'yes',
                 ],
-                'description' => __('Selecciona las imágenes que se mostrarán en el modal', 'portfolio-plugin'),
+                'description' => __('Selecciona las imágenes que se mostrarán en el modal', 'sabsfe-portfolio-plugin'),
             ]
         );
         
@@ -221,7 +224,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'style_section',
             [
-                'label' => __('Estilo', 'portfolio-plugin'),
+                'label' => __('Estilo', 'sabsfe-portfolio-plugin'),
                 'tab' => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
@@ -229,7 +232,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'card_background',
             [
-                'label' => __('Fondo de tarjeta', 'portfolio-plugin'),
+                'label' => __('Fondo de tarjeta', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#2C2C2C',
                 'selectors' => [
@@ -241,7 +244,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'card_border_radius',
             [
-                'label' => __('Radio de borde', 'portfolio-plugin'),
+                'label' => __('Radio de borde', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range' => [
@@ -265,7 +268,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name' => 'title_typography',
-                'label' => __('Tipografía del título', 'portfolio-plugin'),
+                'label' => __('Tipografía del título', 'sabsfe-portfolio-plugin'),
                 'selector' => '{{WRAPPER}} .portfolio-card-title',
             ]
         );
@@ -273,7 +276,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'title_color',
             [
-                'label' => __('Color del título', 'portfolio-plugin'),
+                'label' => __('Color del título', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#FFFFFF',
                 'selectors' => [
@@ -288,7 +291,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'modal_style_section',
             [
-                'label' => __('Estilo del Modal', 'portfolio-plugin'),
+                'label' => __('Estilo del Modal', 'sabsfe-portfolio-plugin'),
                 'tab' => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
@@ -296,7 +299,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_background',
             [
-                'label' => __('Fondo del modal', 'portfolio-plugin'),
+                'label' => __('Fondo del modal', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#FFFFFF',
             ]
@@ -306,7 +309,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_title_heading',
             [
-                'label' => __('Título del Modal', 'portfolio-plugin'),
+                'label' => __('Título del Modal', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -315,7 +318,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_title_color',
             [
-                'label' => __('Color del título', 'portfolio-plugin'),
+                'label' => __('Color del título', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#333333',
             ]
@@ -324,7 +327,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_title_size',
             [
-                'label' => __('Tamaño del título', 'portfolio-plugin'),
+                'label' => __('Tamaño del título', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range' => [
@@ -344,16 +347,16 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_title_weight',
             [
-                'label' => __('Peso del título', 'portfolio-plugin'),
+                'label' => __('Peso del título', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'default' => '600',
                 'options' => [
-                    '300' => __('Light (300)', 'portfolio-plugin'),
-                    '400' => __('Normal (400)', 'portfolio-plugin'),
-                    '500' => __('Medium (500)', 'portfolio-plugin'),
-                    '600' => __('Semi Bold (600)', 'portfolio-plugin'),
-                    '700' => __('Bold (700)', 'portfolio-plugin'),
-                    '800' => __('Extra Bold (800)', 'portfolio-plugin'),
+                    '300' => __('Light (300)', 'sabsfe-portfolio-plugin'),
+                    '400' => __('Normal (400)', 'sabsfe-portfolio-plugin'),
+                    '500' => __('Medium (500)', 'sabsfe-portfolio-plugin'),
+                    '600' => __('Semi Bold (600)', 'sabsfe-portfolio-plugin'),
+                    '700' => __('Bold (700)', 'sabsfe-portfolio-plugin'),
+                    '800' => __('Extra Bold (800)', 'sabsfe-portfolio-plugin'),
                 ],
             ]
         );
@@ -362,7 +365,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_text_heading',
             [
-                'label' => __('Texto del Modal', 'portfolio-plugin'),
+                'label' => __('Texto del Modal', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -371,7 +374,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_text_color',
             [
-                'label' => __('Color del texto', 'portfolio-plugin'),
+                'label' => __('Color del texto', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#555555',
             ]
@@ -380,7 +383,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_text_size',
             [
-                'label' => __('Tamaño del texto', 'portfolio-plugin'),
+                'label' => __('Tamaño del texto', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range' => [
@@ -400,7 +403,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_border_radius',
             [
-                'label' => __('Radio de borde del modal', 'portfolio-plugin'),
+                'label' => __('Radio de borde del modal', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range' => [
@@ -421,7 +424,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'category_badge_heading',
             [
-                'label' => __('Badge de Categoría', 'portfolio-plugin'),
+                'label' => __('Badge de Categoría', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -430,7 +433,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_category_bg',
             [
-                'label' => __('Color de fondo del badge', 'portfolio-plugin'),
+                'label' => __('Color de fondo del badge', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#2196F3',
             ]
@@ -439,7 +442,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_category_text_color',
             [
-                'label' => __('Color de texto del badge', 'portfolio-plugin'),
+                'label' => __('Color de texto del badge', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#FFFFFF',
             ]
@@ -448,7 +451,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_category_border_radius',
             [
-                'label' => __('Radio de borde del badge', 'portfolio-plugin'),
+                'label' => __('Radio de borde del badge', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range' => [
@@ -469,7 +472,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'external_button_heading',
             [
-                'label' => __('Botón Ver Proyecto', 'portfolio-plugin'),
+                'label' => __('Botón Ver Proyecto', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -478,7 +481,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_button_bg',
             [
-                'label' => __('Color de fondo del botón', 'portfolio-plugin'),
+                'label' => __('Color de fondo del botón', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#2196F3',
             ]
@@ -487,7 +490,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_button_text_color',
             [
-                'label' => __('Color de texto del botón', 'portfolio-plugin'),
+                'label' => __('Color de texto del botón', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#FFFFFF',
             ]
@@ -496,7 +499,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_button_hover_bg',
             [
-                'label' => __('Color de fondo al hover', 'portfolio-plugin'),
+                'label' => __('Color de fondo al hover', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#1976D2',
             ]
@@ -505,7 +508,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_button_size',
             [
-                'label' => __('Tamaño del texto del botón', 'portfolio-plugin'),
+                'label' => __('Tamaño del texto del botón', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range' => [
@@ -525,15 +528,15 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_button_weight',
             [
-                'label' => __('Peso del texto del botón', 'portfolio-plugin'),
+                'label' => __('Peso del texto del botón', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'default' => '500',
                 'options' => [
-                    '300' => __('Light (300)', 'portfolio-plugin'),
-                    '400' => __('Normal (400)', 'portfolio-plugin'),
-                    '500' => __('Medium (500)', 'portfolio-plugin'),
-                    '600' => __('Semi Bold (600)', 'portfolio-plugin'),
-                    '700' => __('Bold (700)', 'portfolio-plugin'),
+                    '300' => __('Light (300)', 'sabsfe-portfolio-plugin'),
+                    '400' => __('Normal (400)', 'sabsfe-portfolio-plugin'),
+                    '500' => __('Medium (500)', 'sabsfe-portfolio-plugin'),
+                    '600' => __('Semi Bold (600)', 'sabsfe-portfolio-plugin'),
+                    '700' => __('Bold (700)', 'sabsfe-portfolio-plugin'),
                 ],
             ]
         );
@@ -541,7 +544,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'modal_button_border_radius',
             [
-                'label' => __('Radio de borde del botón', 'portfolio-plugin'),
+                'label' => __('Radio de borde del botón', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range' => [
@@ -562,7 +565,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'gallery_images_heading',
             [
-                'label' => __('Imágenes de la Galería', 'portfolio-plugin'),
+                'label' => __('Imágenes de la Galería', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
             ]
@@ -571,7 +574,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'gallery_image_width',
             [
-                'label' => __('Ancho de las imágenes', 'portfolio-plugin'),
+                'label' => __('Ancho de las imágenes', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['%', 'px'],
                 'range' => [
@@ -596,7 +599,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
         $this->add_control(
             'gallery_image_height',
             [
-                'label' => __('Altura de las imágenes', 'portfolio-plugin'),
+                'label' => __('Altura de las imágenes', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px', 'auto'],
                 'range' => [
@@ -610,14 +613,14 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
                     'unit' => 'auto',
                     'size' => '',
                 ],
-                'description' => __('Usa "auto" para mantener las proporciones originales de las imágenes', 'portfolio-plugin'),
+                'description' => __('Usa "auto" para mantener las proporciones originales de las imágenes', 'sabsfe-portfolio-plugin'),
             ]
         );
         
         $this->add_control(
             'gallery_spacing',
             [
-                'label' => __('Espacio entre imágenes', 'portfolio-plugin'),
+                'label' => __('Espacio entre imágenes', 'sabsfe-portfolio-plugin'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range' => [
@@ -656,7 +659,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
             $args['category_id'] = $settings['category_filter'][0]; // Por simplicidad, solo primera categoría
         }
         
-        $projects = PortfolioDatabase::get_projects($args);
+        $projects = Sabsfe_Portfolio_Database::get_projects($args);
         
         // Renderizar la grilla
         $this->render_portfolio_grid($projects, $settings);
@@ -736,7 +739,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
                 <h2 class="portfolio-widget-title"><?php echo esc_html($settings['title_text']); ?></h2>
             <?php endif; ?>
             
-            <div class="portfolio-grid portfolio-grid-<?php echo $columns; ?>-columns">
+            <div class="sabsfe-portfolio-grid sabsfe-portfolio-grid-<?php echo $columns; ?>-columns">
                 <?php if (!empty($projects)): ?>
                     <?php foreach ($projects as $project): ?>
                         <div class="portfolio-card" data-project-id="<?php echo $project->id; ?>">
@@ -757,14 +760,14 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
                                         <?php if ($enable_modal): ?>
                                             <button class="portfolio-view-btn" data-project-id="<?php echo $project->id; ?>">
                                                 <span class="dashicons dashicons-visibility"></span>
-                                                <?php _e('Ver Detalles', 'portfolio-plugin'); ?>
+                                                <?php _e('Ver Detalles', 'sabsfe-portfolio-plugin'); ?>
                                             </button>
                                         <?php else: ?>
                                             <a href="<?php echo esc_url($project->external_url ?: '#'); ?>" 
                                                class="portfolio-view-btn" 
                                                target="_blank">
                                                 <span class="dashicons dashicons-external"></span>
-                                                <?php _e('Ver Proyecto', 'portfolio-plugin'); ?>
+                                                <?php _e('Ver Proyecto', 'sabsfe-portfolio-plugin'); ?>
                                             </a>
                                         <?php endif; ?>
                                     </div>
@@ -806,7 +809,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
                     <?php endforeach; ?>
                 <?php else: ?>
                     <div class="portfolio-no-projects">
-                        <p><?php _e('No hay proyectos para mostrar.', 'portfolio-plugin'); ?></p>
+                        <p><?php _e('No hay proyectos para mostrar.', 'sabsfe-portfolio-plugin'); ?></p>
                     </div>
                 <?php endif; ?>
             </div>
@@ -815,7 +818,7 @@ class PortfolioElementorWidget extends \Elementor\Widget_Base {
     }
     
     private function get_categories_options() {
-        $categories = PortfolioDatabase::get_categories();
+        $categories = Sabsfe_Portfolio_Database::get_categories();
         $options = array();
         
         foreach ($categories as $category) {

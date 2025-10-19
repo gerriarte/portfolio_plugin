@@ -1,21 +1,24 @@
 <?php
 /**
  * Clase para manejo del frontend del plugin Portfolio
+ * 
+ * @package Sabsfe_Portfolio
+ * @since 1.0.0
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-class PortfolioFrontend {
+class Sabsfe_Portfolio_Frontend {
     
     public function __construct() {
         add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend_scripts'));
-        add_action('wp_ajax_portfolio_get_project', array($this, 'ajax_get_project'));
+        add_action('wp_ajax_sabsfe_portfolio_get_project', array($this, 'ajax_get_project'));
         add_action('wp_ajax_nopriv_portfolio_get_project', array($this, 'ajax_get_project'));
-        add_action('wp_ajax_portfolio_increment_views', array($this, 'ajax_increment_views'));
+        add_action('wp_ajax_sabsfe_portfolio_increment_views', array($this, 'ajax_increment_views'));
         add_action('wp_ajax_nopriv_portfolio_increment_views', array($this, 'ajax_increment_views'));
-        add_action('wp_ajax_portfolio_increment_likes', array($this, 'ajax_increment_likes'));
+        add_action('wp_ajax_sabsfe_portfolio_increment_likes', array($this, 'ajax_increment_likes'));
         add_action('wp_ajax_nopriv_portfolio_increment_likes', array($this, 'ajax_increment_likes'));
     }
     
@@ -25,36 +28,36 @@ class PortfolioFrontend {
     public function enqueue_frontend_scripts() {
         wp_enqueue_style(
             'portfolio-frontend-css',
-            PORTFOLIO_PLUGIN_URL . 'assets/css/frontend.css',
+            SABSFE_PORTFOLIO_URL . 'assets/css/frontend.css',
             array(),
-            PORTFOLIO_PLUGIN_VERSION
+            SABSFE_PORTFOLIO_VERSION
         );
         
         wp_enqueue_style(
             'portfolio-modal-css',
-            PORTFOLIO_PLUGIN_URL . 'assets/css/modal-styles.css',
+            SABSFE_PORTFOLIO_URL . 'assets/css/modal-styles.css',
             array(),
-            PORTFOLIO_PLUGIN_VERSION . '-' . time() // Forzar recarga sin caché
+            SABSFE_PORTFOLIO_VERSION . '-' . time() // Forzar recarga sin caché
         );
         
         wp_enqueue_script(
             'portfolio-frontend-js',
-            PORTFOLIO_PLUGIN_URL . 'assets/js/frontend.js',
+            SABSFE_PORTFOLIO_URL . 'assets/js/frontend.js',
             array('jquery'),
-            PORTFOLIO_PLUGIN_VERSION . '-' . time(), // Forzar recarga sin caché
+            SABSFE_PORTFOLIO_VERSION . '-' . time(), // Forzar recarga sin caché
             true
         );
         
         wp_localize_script('portfolio-frontend-js', 'portfolio_frontend', array(
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('portfolio_frontend_nonce'),
+            'nonce' => wp_create_nonce('sabsfe_portfolio_frontend_nonce'),
             'strings' => [
-                'loading' => __('Cargando...', 'portfolio-plugin'),
-                'error' => __('Error al cargar el proyecto', 'portfolio-plugin'),
-                'close' => __('Cerrar', 'portfolio-plugin'),
-                'share' => __('Compartir', 'portfolio-plugin'),
-                'like' => __('Me gusta', 'portfolio-plugin'),
-                'liked' => __('Te gusta', 'portfolio-plugin')
+                'loading' => __('Cargando...', 'sabsfe-portfolio-plugin'),
+                'error' => __('Error al cargar el proyecto', 'sabsfe-portfolio-plugin'),
+                'close' => __('Cerrar', 'sabsfe-portfolio-plugin'),
+                'share' => __('Compartir', 'sabsfe-portfolio-plugin'),
+                'like' => __('Me gusta', 'sabsfe-portfolio-plugin'),
+                'liked' => __('Te gusta', 'sabsfe-portfolio-plugin')
             ]
         ));
     }
@@ -63,19 +66,19 @@ class PortfolioFrontend {
      * AJAX: Obtener proyecto para modal
      */
     public function ajax_get_project() {
-        check_ajax_referer('portfolio_frontend_nonce', 'nonce');
+        check_ajax_referer('sabsfe_portfolio_frontend_nonce', 'nonce');
         
         $project_id = intval($_POST['project_id']);
-        $project = PortfolioDatabase::get_project($project_id);
+        $project = Sabsfe_Portfolio_Database::get_project($project_id);
         
         if (!$project) {
             wp_send_json_error(array(
-                'message' => __('Proyecto no encontrado', 'portfolio-plugin')
+                'message' => __('Proyecto no encontrado', 'sabsfe-portfolio-plugin')
             ));
         }
         
         // Incrementar vistas
-        PortfolioDatabase::increment_views($project_id);
+        Sabsfe_Portfolio_Database::increment_views($project_id);
         
         // Preparar datos del proyecto
         $project_data = array(
@@ -103,10 +106,10 @@ class PortfolioFrontend {
      * AJAX: Incrementar vistas
      */
     public function ajax_increment_views() {
-        check_ajax_referer('portfolio_frontend_nonce', 'nonce');
+        check_ajax_referer('sabsfe_portfolio_frontend_nonce', 'nonce');
         
         $project_id = intval($_POST['project_id']);
-        $result = PortfolioDatabase::increment_views($project_id);
+        $result = Sabsfe_Portfolio_Database::increment_views($project_id);
         
         if ($result) {
             wp_send_json_success();
@@ -119,10 +122,10 @@ class PortfolioFrontend {
      * AJAX: Incrementar likes
      */
     public function ajax_increment_likes() {
-        check_ajax_referer('portfolio_frontend_nonce', 'nonce');
+        check_ajax_referer('sabsfe_portfolio_frontend_nonce', 'nonce');
         
         $project_id = intval($_POST['project_id']);
-        $result = PortfolioDatabase::increment_likes($project_id);
+        $result = Sabsfe_Portfolio_Database::increment_likes($project_id);
         
         if ($result) {
             wp_send_json_success();
@@ -192,19 +195,19 @@ class PortfolioFrontend {
                             
                             <!-- Videos -->
                             <div class="modal-project-videos" style="display: none;">
-                                <h4><?php _e('Videos', 'portfolio-plugin'); ?></h4>
+                                <h4><?php _e('Videos', 'sabsfe-portfolio-plugin'); ?></h4>
                                 <div class="videos-container"></div>
                             </div>
                             
                             <!-- Galería -->
                             <div class="modal-project-gallery" style="display: none;">
-                                <h4><?php _e('Galería', 'portfolio-plugin'); ?></h4>
+                                <h4><?php _e('Galería', 'sabsfe-portfolio-plugin'); ?></h4>
                                 <div class="gallery-grid"></div>
                             </div>
                             
                             <!-- Contenido detallado -->
                             <div class="modal-project-content">
-                                <h3><?php _e('Sobre el Proyecto', 'portfolio-plugin'); ?></h3>
+                                <h3><?php _e('Sobre el Proyecto', 'sabsfe-portfolio-plugin'); ?></h3>
                                 <div class="project-description"></div>
                                 <div class="project-detailed-content"></div>
                             </div>
@@ -215,22 +218,22 @@ class PortfolioFrontend {
                             
                             <!-- Detalles del proyecto -->
                             <div class="modal-project-details">
-                                <h4><?php _e('Detalles', 'portfolio-plugin'); ?></h4>
+                                <h4><?php _e('Detalles', 'sabsfe-portfolio-plugin'); ?></h4>
                                 <div class="details-list">
                                     <div class="detail-item">
-                                        <span class="detail-label"><?php _e('Categoría:', 'portfolio-plugin'); ?></span>
+                                        <span class="detail-label"><?php _e('Categoría:', 'sabsfe-portfolio-plugin'); ?></span>
                                         <span class="detail-value category-value"></span>
                                     </div>
                                     <div class="detail-item">
-                                        <span class="detail-label"><?php _e('Fecha:', 'portfolio-plugin'); ?></span>
+                                        <span class="detail-label"><?php _e('Fecha:', 'sabsfe-portfolio-plugin'); ?></span>
                                         <span class="detail-value date-value"></span>
                                     </div>
                                     <div class="detail-item">
-                                        <span class="detail-label"><?php _e('Vistas:', 'portfolio-plugin'); ?></span>
+                                        <span class="detail-label"><?php _e('Vistas:', 'sabsfe-portfolio-plugin'); ?></span>
                                         <span class="detail-value views-value">0</span>
                                     </div>
                                     <div class="detail-item">
-                                        <span class="detail-label"><?php _e('Likes:', 'portfolio-plugin'); ?></span>
+                                        <span class="detail-label"><?php _e('Likes:', 'sabsfe-portfolio-plugin'); ?></span>
                                         <span class="detail-value likes-value">0</span>
                                     </div>
                                 </div>
@@ -240,13 +243,13 @@ class PortfolioFrontend {
                             <div class="modal-project-action">
                                 <a href="#" class="modal-external-btn" target="_blank" style="display: none;">
                                     <span class="dashicons dashicons-external"></span>
-                                    <?php _e('Ver Proyecto', 'portfolio-plugin'); ?>
+                                    <?php _e('Ver Proyecto', 'sabsfe-portfolio-plugin'); ?>
                                 </a>
                             </div>
                             
                             <!-- Compartir -->
                             <div class="modal-share-section">
-                                <h4><?php _e('Compartir', 'portfolio-plugin'); ?></h4>
+                                <h4><?php _e('Compartir', 'sabsfe-portfolio-plugin'); ?></h4>
                                 <div class="share-buttons">
                                     <button class="share-btn facebook" data-platform="facebook">
                                         <span class="dashicons dashicons-facebook"></span>
@@ -262,7 +265,7 @@ class PortfolioFrontend {
                                     </button>
                                     <button class="share-btn copy-link" data-platform="copy">
                                         <span class="dashicons dashicons-admin-links"></span>
-                                        <?php _e('Copiar Enlace', 'portfolio-plugin'); ?>
+                                        <?php _e('Copiar Enlace', 'sabsfe-portfolio-plugin'); ?>
                                     </button>
                                 </div>
                             </div>
